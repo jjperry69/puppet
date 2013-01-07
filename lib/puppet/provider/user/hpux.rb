@@ -32,6 +32,18 @@ Puppet::Type.type(:user).provide :hpuxuseradd, :parent => :useradd do
 
   def password
       # Password management routine for trusted and non-trusted systems
+      #temp=""
+      while ent = Etc.getpwent() do
+          if ent.name == resource.name
+             temp=ent.name
+             break
+          end
+      end
+      Etc.endpwent()
+      if !temp
+          return nil
+      end
+
       ent = Etc.getpwnam(resource.name)
       if ent.passwd == "*"
           # Either no password or trusted password, check trusted
