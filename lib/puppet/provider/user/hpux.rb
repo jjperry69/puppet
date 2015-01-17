@@ -31,8 +31,7 @@ Puppet::Type.type(:user).provide :hpuxuseradd, :parent => :useradd do
   def modifycmd(param,value)
      cmd = super(param, value)
      cmd << "-F"
-     trusted_sys = trusted
-     if(trusted_sys == :true ) then
+     if trusted then
      # JP - Append on additional command to reset password age to 0
      # until work around with expiry module can be found for trusted
      # computing.
@@ -85,9 +84,9 @@ Puppet::Type.type(:user).provide :hpuxuseradd, :parent => :useradd do
   # UID for root should always be 0
       trusted_sys = exec_getprpw('root','-m uid')
       if trusted_sys.chomp == "uid=0"
-        return :true
+        return true
       else
-        return :false
+        return false
       end
       nil
   end
