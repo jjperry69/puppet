@@ -58,13 +58,13 @@ describe provider_class do
 
   it "Should add modprpw to modifycmd if Trusted System" do
     resource.stubs(:allowdupe?).returns true
-    provider.stubs(:exec_getprpw).with('root','-m uid').returns('uid=0')
-    provider.expects(:execute).with { |args| args.include?("/usr/lbin/modprpw") }
+    provider.expects(:exec_getprpw).with('root','-m uid').returns('uid=0')
+    provider.expects(:execute).with(['/usr/sam/lbin/usermod.sam', '-u', 1000, '-o', 'testuser', '-F', ';', '/usr/lbin/modprpw', '-v', '-l', 'testuser'])
     provider.uid = 1000
   end
   it "Should not add modprpw if not Trusted System" do
     resource.stubs(:allowdupe?).returns true
-    provider.stubs(:exec_getprpw).with('root','-m uid').returns('System is not trusted')
+    provider.expects(:exec_getprpw).with('root','-m uid').returns('System is not trusted')
     provider.expects(:execute).with(['/usr/sam/lbin/usermod.sam', '-u', 1000, '-o', 'testuser', '-F'])
     provider.uid = 1000
   end
